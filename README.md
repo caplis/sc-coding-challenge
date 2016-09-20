@@ -16,6 +16,6 @@ $ https://github.com/caplis/sc-coding-challenge.git
 ### Run
 ```
 $ cd sc-coding-challenge
-$ node ./index "3 * 2 + 2 * 3"`
+$ node ./index "3 * 2 + 2 * 3"
 ```
 
