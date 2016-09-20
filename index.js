@@ -63,12 +63,29 @@ let parse_input = (input) => {
 // calculate based on the parsed operators/operands with the proper order
 // determined in parse_input
 let recursive_calc = (operators, operands) => {
-    let op = operators.shift();
-    let a = operands.shift();
-    if (operators.length === 0)
-        return OPS[op](operands.shift(), a);
-    else
-        return OPS[op](recursive_calc(operators, operands), a);
+    if (operators.length === 1) {
+        return OPS[operators[0]](operands.shift(), operands.shift());
+    } else {
+        let new_operators = [];
+        let new_operands = [];
+        for (let i = 0; i < operators.length; i++) {
+            if (i % 2 === 1) {
+                new_operators.push(operators[i]);
+                if (operands.length === 1) {
+                    new_operands.push(operands[0]);
+                }
+            } else {
+                let a = operands.shift();
+                let b = operands.shift();
+                if (b) {
+                    new_operands.push(OPS[operators[i]](a, b));
+                } else {
+                    new_operands.push(a);
+                }
+            }
+        }
+        return recursive_calc(new_operators, new_operands);
+    }
 };
 
 let calculate = (input) => {
