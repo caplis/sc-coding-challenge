@@ -1,5 +1,6 @@
 'use strict';
 
+// Operators table
 const OPS = {
     '*': (a, b) => a * b,
     '/': (a, b) => a / b,
@@ -7,12 +8,15 @@ const OPS = {
     '+': (a, b) => a + b
 }
 
+// Operator precedence
 const PRECEDENCE = ['*', '/'];
 
+// Helpers
 let get_precedence_fn = (op) => {
     return PRECEDENCE.indexOf(op) !== -1 ? 'unshift' : 'push';
 }
 
+// Parser
 let parse_input = (input) => {
     // initialize parsing vars 
     let operands = [];
@@ -52,12 +56,29 @@ let parse_input = (input) => {
         }
     }
     return { operands, operators };
-}
+};
+    
+
+// NOTE: this isn't quite working, but the idea is that this would recursively
+// calculate based on the parsed operators/operands with the proper order
+// determined in parse_input
+let recursive_calc = (operators, operands) => {
+    let op = operators.shift();
+    let a = operands.shift();
+    if (operators.length === 0)
+        return OPS[op](operands.shift(), a);
+    else
+        return OPS[op](recursive_calc(operators, operands), a);
+};
 
 let calculate = (input) => {
     let parsed = parse_input(input);
-    
-}
+    if (parsed instanceof Error) {
+        console.log(parsed.message);
+        return;
+    }
+    console.log(recursive_calc(parsed.operators, parsed.operands));
+};
 
 ////////////////////////////////
 // CLI                        //
@@ -67,5 +88,4 @@ let calculate = (input) => {
 
 const input = process.argv.slice(2)[0]
 calculate(input);
-
 
